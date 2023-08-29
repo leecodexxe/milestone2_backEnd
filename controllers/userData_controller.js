@@ -70,7 +70,6 @@ userDataController.post("/", async (req, res) => {
       res.status(500).json(error);
     }
     await prisma.$disconnect()
-    process.exit(1)
   }
 });
 
@@ -100,5 +99,27 @@ userDataController.put("/", async (req, res) => {
     process.exit(1)
   }
 });
+
+userDataController.delete("/", async (req, res) => {
+  try {
+    const deletegame = await prisma.gamedata.deleteMany({
+      where:{user_id: req.body.user_id}
+    })
+      const deleteGameData = await prisma.userdata.delete({
+          where:{user_id: req.body.user_id}
+      })
+      res.status(200).json({
+          message: 'sussece',
+          delete: deleteGameData,
+          data:deletegame
+      });
+      await prisma.$disconnect()
+  } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+      await prisma.$disconnect()
+      process.exit(1)
+  }
+})
 
 module.exports = userDataController;
