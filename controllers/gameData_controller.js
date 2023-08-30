@@ -6,7 +6,9 @@ const prisma = new PrismaClient()
 
 gameDataController.get("/", async (req, res) => {
     try {
-        const allGameData = await prisma.gamedata.findMany();
+        const allGameData = await prisma.gamedata.findMany({
+            orderBy:{session_start:'asc'},
+        });
         res.status(200).json(allGameData);
         await prisma.$disconnect()
     } catch (error) {
@@ -33,9 +35,9 @@ gameDataController.post("/", async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json(error);
+        await prisma.$disconnect()
+        process.exit(1)
     }
-    await prisma.$disconnect()
-    process.exit(1)
 });
 
 //Edit existing Data

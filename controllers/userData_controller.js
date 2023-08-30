@@ -6,7 +6,9 @@ const prisma = new PrismaClient()
 
 userDataController.get("/", async (req, res) => {
   try {
-    const allUsers = await prisma.userdata.findMany();
+    const allUsers = await prisma.userdata.findMany({
+      orderBy:{user_id:'asc'},
+    });
     res.status(200).json(allUsers);
     await prisma.$disconnect()
   } catch (error) {
